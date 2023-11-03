@@ -1,0 +1,37 @@
+Steps to Reproduce Experiments:
+
+1. Create a virtual environment and setup the necessary libraries from requirements.txt
+
+2. You'll also need to download FastText-0.9.2 and set it up within the code/ repository
+
+3. You can download the Wikipedia dumps and fastText models and place them in data/wiki_dumps and models/ respectively
+  **Expected Time: 2 days if you can queue up things to run overnight
+
+4. Then, you can run the following bash commands to create necessary fastText embedding files, in the format
+  that the reproduce/ scripts expect.
+  **Expected Time: 5-6 hours
+
+5. You can use word2vec.py and get_models.py to train CBOW and SkipGram embeddings. These should be placed
+   in data/Embedings-CBOW and data/Embeddings-Skipgram respectively. We
+   highly recommend running them in parallel. Although, how many training processes you can run will depend on the
+  amount of memory you have. We were able to run them in batches with a 64GB memory laptop.
+  **Expected Time: 1-2 days
+
+6. You can run reproduce/section5-1.py and section5-2.py to run experiments. All the tests are
+  modularized in functions so you can run specific tests if you'd like. These should also take overnight
+  because the experiment files are really long (10K examples+, 9 languages).
+  **Expected Time: 1 day
+
+Overall Time: 5 days, minimum.
+
+COMMAND EXAMPLES:
+Example bash commands used to produce the respective fastText vectors for the test sets.
+You can use this command by just swapping out the respective language files.
+cat ../data/embed_source_5-1-eng-rw.txt |  ./fastText-0.9.2/fasttext print-word-vectors ../models/wiki.en/wiki.en.bin > ../data/embed_output_5-1-eng-rw.txt
+cat ../data/de-GUR65_5-1-words.txt |  ./fastText-0.9.2/fasttext print-word-vectors ../models/wiki.de/wiki.de.bin > ../data/embed_output_5-1-de-GUR65.txt
+cat ../data/5-2/mikolov-semantic-fasttext0.txt |  ./fastText-0.9.2/fasttext analogies ../models/wiki.en/wiki.en.bin > ../data/5-2/response_short.txt
+
+# For Checkpoint 2 Prototype Experiments
+python read_raw_data.py
+./fastText-0.9.2/fasttext supervised -input ../data/upscale/upscale.train -output ../output/upscale_model
+./fastText-0.9.2/fasttext test ../output/upscale_model.bin ../data/upscale/upscale.valid
